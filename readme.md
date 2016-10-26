@@ -20,7 +20,8 @@ See [License](license.md)
 
 Imgix:
   sub_domain: 'example'
-  folder_path: 'assets/Uploads/' # note that this is the default path
+  secure_url_token: '1234567891234' # (Optional) Defines the signkey for private sources
+  folder_path: 'assets/Uploads/' # (Optional) Default path id assets/Uploads/
 ```
 
 ## Maintainers
