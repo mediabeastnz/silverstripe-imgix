@@ -15,7 +15,7 @@ composer require plato-creative/silverstripe-imgix
 See [License](license.md)
 
 ## Configuration
-
+Define imgix source in your site config.yml file as below
 ```yaml
 
 Imgix:
@@ -47,7 +47,7 @@ If you would like to make contributions to the module please ensure you raise a 
 ## Adding to a DataObject
 Add a has_one or has_many relationship to "Imgix" in the same way you would with "Image". See example below
 
-```
+```php
 <?php
 class MyCustomPage extends Page
 {
