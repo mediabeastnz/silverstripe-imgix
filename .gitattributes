@@ -1,0 +1,9 @@
+.gitignore export-ignore
+.gitattributes export-ignore
+.editorconfig export-ignore
+bower.json export-ignore
+/thirdparty/imgix.js/spec
+/thirdparty/imgix.js/src
+/thirdparty/imgix.js/*.json
+/thirdparty/imgix.js/*.yml
+/thirdparty/imgix.js/*.md

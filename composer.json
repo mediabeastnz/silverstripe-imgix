@@ -1,0 +1,14 @@
+{
+    "name": "plato-creative/silverstripe-imgix",
+    "description": "Integrates imgix with silverstripe.",
+    "keywords": ["silverstripe", "CMS"],
+    "require": {
+        "silverstripe/framework": "^3.2",
+        "imgix/imgix-php": "dev-master"
+    },
+    "license": "BSD-3-Clause",
+    "minimum-stability": "dev",
+    "extra": {
+        "installer-name": "imgix",
+    }
+}
