@@ -102,6 +102,7 @@ $Image.Fill(150,150).Right // Crop from the right of the image, left
 $Image.Fill(150,150).Faces // If faces are detected in the image, attempts to center the crop to them
 $Image.Fill(150,150).Entropy // Automatically finds and crops to an area of interest by looking for busy sections of the image
 $Image.Fill(150,150).Edges // Automatically finds an crops to an area of interest by performing edge detection looking for objects within an image
+$Image.Fill(150,150).Faces.Top.Right // Will crop to faces, and if there are no faces, then crops to the top, right
 
 // Padding functions (add space around an image)
 $Image.Pad(100,100) // Returns a 100x100px padded image, with white bars added at the top and bottom
