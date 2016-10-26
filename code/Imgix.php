@@ -16,6 +16,8 @@ class Imgix extends File
 
     private static $sub_domain = null;
 
+    private static $secure_url_token = null;
+
     private static $folder_path = 'assets/Uploads/';
 
     protected $responsive = false;
@@ -125,6 +127,8 @@ class Imgix extends File
         }
         $domain = "{$subDomain}.imgix.net";
         $urlBuilder = new UrlBuilder($domain);
+        $urlBuilder->setUseHttps(Director::is_https());
+        $urlBuilder->setSignKey($this->config()->get('secure_url_token'));
         $originalFilePath = $this->getRelativePath();
         $imgixFilePath = str_ireplace($this->config()->get('folder_path'), '', $originalFilePath);
         $parameters = $this->parameters;
