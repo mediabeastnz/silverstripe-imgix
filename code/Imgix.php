@@ -312,6 +312,50 @@ class Imgix extends File
     }
 
     /**
+    * Adds auto parameters to allow imgix to make certain types of adjustments and optimizations automatically.
+    * Options include compress,enhance,format,redeye
+    *
+    * @uses Image::Fill()
+    * @param string $parameters
+    * @return Image
+    */
+    public function Auto($newParameter)
+    {
+        if ($originalParameters = $this->getParameter('auto')) {
+            $originalParameters[] = $newParameter;
+            $parameters = implode(',', $originalParameters);
+        } else {
+            $parameters = $newParameter;
+        }
+        $this->setParameter('auto', $parameters);
+        return $this;
+    }
+
+    public function Compress()
+    {
+        $this->Auto('compress');
+        return $this;
+    }
+
+    public function Enhance()
+    {
+        $this->Auto('enhance');
+        return $this;
+    }
+
+    public function Format()
+    {
+        $this->Auto('format');
+        return $this;
+    }
+
+    public function Redeye()
+    {
+        $this->Auto('redeye');
+        return $this;
+    }
+
+    /**
      * Resize this image for the CMS. Use in templates with $CMSThumbnail
      *
      * @return Image_Cached|null
@@ -345,7 +389,9 @@ class Imgix extends File
 
     public function getParameter($key)
     {
-        return $this->parameters[$key];
+        if (isset($this->parameters[$key])) {
+            return $this->parameters[$key];
+        }
     }
 
     /**
