@@ -96,7 +96,6 @@ class Imgix extends File
             }
             if ($this->responsive) {
                 $this->responsive = false; // reset for next image
-                Requirements::javascript(SSIMGIX_DIR.'/thirdparty/imgix.js/dist/imgix.min.js');
                 return "<img ix-src=\"$url\" alt=\"$title\" />";
             }
             return "<img src=\"$url\" alt=\"$title\" />";
@@ -138,6 +137,26 @@ class Imgix extends File
     }
 
     /**
+     * Resize this image for the CMS. Use in templates with $CMSThumbnail
+     *
+     * @return Image|null
+     */
+    public function CMSThumbnail()
+    {
+        return $this->Pad($this->stat('cms_thumbnail_width'),$this->stat('cms_thumbnail_height'));
+    }
+
+    /**
+     * Resize this image for use as a thumbnail in a strip. Use in templates with $StripThumbnail.
+     *
+     * @return Image|null
+     */
+    public function StripThumbnail()
+    {
+        return $this->Fill($this->stat('strip_thumbnail_width'),$this->stat('strip_thumbnail_height'));
+    }
+
+    /**
      * Scale image proportionally to fit within the specified bounds
      *
      * @param integer $width The width to size within
@@ -147,7 +166,7 @@ class Imgix extends File
     public function Fit($width, $height)
     {
         $this->setDimensions($width, $height);
-        $this->setResample('fit','clip');
+        $this->setParameter('fit','clip');
         return $this;
     }
 
@@ -155,7 +174,7 @@ class Imgix extends File
      * Proportionally scale down this image if it is wider or taller than the specified dimensions.
      * Similar to Fit but without up-sampling. Use in templates with $FitMax.
      *
-     * @uses Image::Fit()
+     * @uses Imgix::Fit()
      * @param integer $width The maximum width of the output image
      * @param integer $height The maximum height of the output image
      * @return Image
@@ -163,7 +182,7 @@ class Imgix extends File
     public function FitMax($width, $height)
     {
         $this->setDimensions($width, $height);
-        $this->setResample('fit','max');
+        $this->setParameter('fit','max');
         return $this;
     }
 
@@ -178,7 +197,7 @@ class Imgix extends File
     public function Fill($width, $height)
     {
         $this->setDimensions($width, $height);
-        $this->setResample('fit','crop');
+        $this->setParameter('fit','crop');
         return $this;
     }
 
@@ -187,6 +206,7 @@ class Imgix extends File
      * then scale down the image to those dimensions if it exceeds them.
      * Similar to Fill but without up-sampling. Use in templates with $FillMax.
      *
+     * @uses Imgix::Fill()
      * @param integer $width The relative (used to determine aspect ratio) and maximum width of the output image
      * @param integer $height The relative (used to determine aspect ratio) and maximum height of the output image
      * @return Image
@@ -210,7 +230,7 @@ class Imgix extends File
     public function Pad($width, $height, $backgroundColor='FFFFFF')
     {
         $this->setDimensions($width, $height);
-        $this->setResample('fit','fill');
+        $this->setParameter('fit','fill');
         $this->setParameter('bg', $backgroundColor);
         return $this;
     }
@@ -225,7 +245,7 @@ class Imgix extends File
     public function ScaleWidth($width)
     {
         $this->setDimensions($width);
-        $this->setResample('fit','clip');
+        $this->setParameter('fit','clip');
         return $this;
     }
 
@@ -233,7 +253,7 @@ class Imgix extends File
     * Proportionally scale down this image if it is wider than the specified width.
     * Similar to ScaleWidth but without up-sampling. Use in templates with $ScaleMaxWidth.
     *
-    * @uses Image::ScaleWidth()
+    * @uses Imgix::ScaleWidth()
     * @param integer $width The maximum width of the output image
     * @return Image
     */
@@ -253,7 +273,7 @@ class Imgix extends File
     public function ScaleHeight($height)
     {
         $this->setDimensions(null, $height);
-        $this->setResample('fit','clip');
+        $this->setParameter('fit','clip');
         return $this;
 	}
 
@@ -261,7 +281,7 @@ class Imgix extends File
      * Proportionally scale down this image if it is taller than the specified height.
      * Similar to ScaleHeight but without up-sampling. Use in templates with $ScaleMaxHeight.
      *
-     * @uses Image::ScaleHeight()
+     * @uses Imgix::ScaleHeight()
      * @param integer $height The maximum height of the output image
      * @return Image
      */
@@ -277,7 +297,7 @@ class Imgix extends File
      * Crop image on X axis if it exceeds specified width. Retain height.
      * Use in templates with $CropWidth. Example: $Image.ScaleHeight(100).$CropWidth(100)
      *
-     * @uses Image::Fill()
+     * @uses Imgix::Fill()
      * @param integer $width The maximum width of the output image
      * @return Image
      */
@@ -293,7 +313,7 @@ class Imgix extends File
     * Crop image on Y axis if it exceeds specified height. Retain width.
     * Use in templates with $CropHeight. Example: $Image.ScaleWidth(100).CropHeight(100)
     *
-    * @uses Image::Fill()
+    * @uses Imgix::Fill()
     * @param integer $height The maximum height of the output image
     * @return Image
     */
@@ -307,83 +327,86 @@ class Imgix extends File
 
     public function Responsive($boolean = true)
     {
+        Requirements::javascript(SSIMGIX_DIR.'/thirdparty/imgix.js/dist/imgix.min.js');
         $this->responsive = $boolean;
-        return $this;
-    }
-
-    /**
-    * Adds auto parameters to allow imgix to make certain types of adjustments and optimizations automatically.
-    * Options include compress,enhance,format,redeye
-    *
-    * @uses Image::Fill()
-    * @param string $parameters
-    * @return Image
-    */
-    public function Auto($newParameter)
-    {
-        if ($originalParameters = $this->getParameter('auto')) {
-            $originalParameters[] = $newParameter;
-            $parameters = implode(',', $originalParameters);
-        } else {
-            $parameters = $newParameter;
-        }
-        $this->setParameter('auto', $parameters);
         return $this;
     }
 
     public function Compress()
     {
-        $this->Auto('compress');
+        $this->setParameter('auto', 'compress', true);
         return $this;
     }
 
     public function Enhance()
     {
-        $this->Auto('enhance');
+        $this->setParameter('auto', 'enhance', true);
         return $this;
     }
 
     public function Format()
     {
-        $this->Auto('format');
+        $this->setParameter('auto', 'format', true);
         return $this;
     }
 
     public function Redeye()
     {
-        $this->Auto('redeye');
+        $this->setParameter('auto', 'redeye', true);
         return $this;
     }
 
-    /**
-     * Resize this image for the CMS. Use in templates with $CMSThumbnail
-     *
-     * @return Image_Cached|null
-     */
-    public function CMSThumbnail()
+    public function Top()
     {
-        return $this->Pad($this->stat('cms_thumbnail_width'),$this->stat('cms_thumbnail_height'));
-    }
-
-    /**
-     * Resize this image for use as a thumbnail in a strip. Use in templates with $StripThumbnail.
-     *
-     * @return Image_Cached|null
-     */
-    public function StripThumbnail()
-    {
-        return $this->Fill($this->stat('strip_thumbnail_width'),$this->stat('strip_thumbnail_height'));
-    }
-
-    public function setResample($key, $value)
-    {
-        $this->setParameter($key, $value);
+        $this->setParameter('crop', 'top', true);
         return $this;
     }
 
-    public function setParameter($key, $value)
+    public function Bottom()
     {
-        $this->parameters[$key] = $value;
+        $this->setParameter('crop', 'bottom', true);
+        return $this;
+    }
+
+    public function Left()
+    {
+        $this->setParameter('crop', 'left', true);
+        return $this;
+    }
+
+    public function Right()
+    {
+        $this->setParameter('crop', 'right', true);
+        return $this;
+    }
+
+    public function Faces()
+    {
+        $this->setParameter('crop', 'faces', true);
+        return $this;
+    }
+
+    public function Entropy()
+    {
+        $this->setParameter('crop', 'entropy', true);
+        return $this;
+    }
+
+    public function Edges()
+    {
+        $this->setParameter('crop', 'edges', true);
+        return $this;
+    }
+
+    public function setParameter($key, $value, $append = false)
+    {
+        if (($originalParameters = explode(',', $this->getParameter($key))) && $append) {
+            $originalParameters[] = $value;
+            $parameters = implode(',', $originalParameters);
+        } else {
+            $parameters = $value;
+        }
+        $this->parameters[$key] = $parameters;
         return $this;
     }
 
@@ -448,7 +471,6 @@ class Imgix extends File
     public function getDimensions($dim = "string")
     {
         if($this->getField('Filename')) {
-
             $imagefile = $this->getFullPath();
             if($this->exists()) {
                 $size = getimagesize($imagefile);
@@ -469,11 +491,11 @@ class Imgix extends File
     */
     public function getWidth()
     {
-        return ($this->getParameter('w')) ? $this->getParameter('w') : $this->getOriginalWidth(0);
+        return ($this->getParameter('w')) ? $this->getParameter('w') : $this->getOriginalWidth();
     }
 
     public function getOriginalHeight() {
-        return $this->getDimensions(1);
+        return $this->getDimensions(0);
     }
 
     /**
@@ -481,7 +503,7 @@ class Imgix extends File
      * @return int
      */
     public function getHeight() {
-        return ($this->getParameter('h')) ? $this->getParameter('h') : $this->getOriginalHeight(1);
+        return ($this->getParameter('h')) ? $this->getParameter('h') : $this->getOriginalHeight();
     }
 
     /**
