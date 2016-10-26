@@ -45,7 +45,7 @@ If you would like to make contributions to the module please ensure you raise a 
 ## Adding to a DataObject
 Add a has_one or has_many relationship to "Imgix" in the same way you would with "Image". See example below
 
-```php
+```
 <?php
 class MyCustomPage extends Page
 {
@@ -76,4 +76,28 @@ class MyCustomPage extends Page
 		return $fields;
 	}
 }
+```
+
+## Manipulating images in Templates
+
+```
+$Image.ScaleWidth(150) // Returns a 150x75px image
+$Image.ScaleMaxWidth(100) // Returns a 100x50px image (like ScaleWidth but prevents up-sampling)
+$Image.ScaleHeight(150) // Returns a 300x150px image (up-sampled. Try to avoid doing this)
+$Image.ScaleMaxHeight(150) // Returns a 200x100px image (like ScaleHeight but prevents up-sampling)
+$Image.Fit(300,300) // Returns an image that fits within a 300x300px boundary, resulting in a 300x150px image (up-sampled)
+$Image.FitMax(300,300) // Returns a 200x100px image (like Fit but prevents up-sampling)
+
+// Cropping functions
+$Image.Fill(150,150) // Returns a 150x150px image resized and cropped to fill specified dimensions (up-sampled)
+$Image.FillMax(150,150) // Returns a 100x100px image (like Fill but prevents up-sampling)
+$Image.CropWidth(150) // Returns a 150x100px image (trims excess pixels off the x axis from the center)
+$Image.CropHeight(50) // Returns a 200x50px image (trims excess pixels off the y axis from the center)
+
+// Padding functions (add space around an image)
+$Image.Pad(100,100) // Returns a 100x100px padded image, with white bars added at the top and bottom
+$Image.Pad(100, 100, CCCCCC) // Same as above but with a grey background
+
+// Responsive functions
+$Image.Responsive() // Returns an image that is dynamically generated based on the size of the viewport
 ```
