@@ -14,7 +14,7 @@ class Imgix extends File
     const ORIENTATION_PORTRAIT = 1;
     const ORIENTATION_LANDSCAPE = 2;
 
-    private static $sub_domain = 'basil';
+    private static $sub_domain = null;
 
     private static $folder_path = 'assets/Uploads/';
 
@@ -120,6 +120,9 @@ class Imgix extends File
     public function getURL()
     {
         $subDomain = $this->config()->get('sub_domain');
+        if (!$subDomain) {
+            user_error("Undefined sub_domain: Please Imgix sub_domain in your config", E_USER_ERROR);
+        }
         $domain = "{$subDomain}.imgix.net";
         $urlBuilder = new UrlBuilder($domain);
         $originalFilePath = $this->getRelativePath();
