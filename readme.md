@@ -114,5 +114,5 @@ $Image.Responsive() // Returns an image that is dynamically generated based on t
 $Image.Compress() // Returns an image using imgix's best-effort techniques to reduce the size of the image
 $Image.Enhance() // Returns an image with more vibrant appearance
 $Image.Format() // Imgix chooses the most appropriate file format for delivering your image based on the requesting web browser
-$Image.Redeye() // Returns an image with red–eye removal is applied to detected faces
+$Image.Redeye() // Returns an image with red eye removal applied to detected faces
 ```
