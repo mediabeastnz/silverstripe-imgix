@@ -3,7 +3,8 @@
 Integrates [imgix](https://docs.imgix.com/) with silverstripe.
 
 ## Requirements
- * SilverStripe ^3.2
+ * [SilverStripe ^3.2](https://www.silverstripe.org/)
+ * [imgix-php](https://github.com/imgix/imgix-php)
 
 ## Installation
 ```
