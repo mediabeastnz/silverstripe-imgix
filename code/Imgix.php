@@ -8,7 +8,7 @@
 
 use Imgix\UrlBuilder;
 
-class Imgix extends File
+class Imgix extends Image
 {
     const ORIENTATION_SQUARE = 0;
     const ORIENTATION_PORTRAIT = 1;
@@ -27,54 +27,6 @@ class Imgix extends File
     private static $casting = array(
         'Tag' => 'HTMLText',
     );
-
-    /**
-	 * @config
-	 * @var int The width of an image thumbnail in a strip.
-	 */
-	private static $strip_thumbnail_width = 50;
-
-	/**
-	 * @config
-	 * @var int The height of an image thumbnail in a strip.
-	 */
-	private static $strip_thumbnail_height = 50;
-
-	/**
-	 * @config
-	 * @var int The width of an image thumbnail in the CMS.
-	 */
-	private static $cms_thumbnail_width = 100;
-
-	/**
-	 * @config
-	 * @var int The height of an image thumbnail in the CMS.
-	 */
-	private static $cms_thumbnail_height = 100;
-
-	/**
-	 * @config
-	 * @var int The width of an image thumbnail in the Asset section.
-	 */
-	private static $asset_thumbnail_width = 100;
-
-	/**
-	 * @config
-	 * @var int The height of an image thumbnail in the Asset section.
-	 */
-	private static $asset_thumbnail_height = 100;
-
-	/**
-	 * @config
-	 * @var int The width of an image preview in the Asset section.
-	 */
-	private static $asset_preview_width = 400;
-
-	/**
-	 * @config
-	 * @var int The height of an image preview in the Asset section.
-	 */
-	private static $asset_preview_height = 200;
 
     /**
      * Return an XHTML img tag for this Image,
