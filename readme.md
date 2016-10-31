@@ -109,11 +109,11 @@ $Image.Pad(100,100) // Returns a 100x100px padded image, with white bars added a
 $Image.Pad(100, 100, CCCCCC) // Same as above but with a grey background
 
 // Responsive functions
-$Image.Responsive() // Returns an image that is dynamically generated based on the size of the viewport
+$Image.Responsive // Returns an image that is dynamically generated based on the size of the viewport
 
 // Automatic functions
-$Image.Compress() // Returns an image using imgix's best-effort techniques to reduce the size of the image
-$Image.Enhance() // Returns an image with more vibrant appearance
-$Image.Format() // Imgix chooses the most appropriate file format for delivering your image based on the requesting web browser
-$Image.Redeye() // Returns an image with red eye removal applied to detected faces
+$Image.Compress // Returns an image using imgix's best-effort techniques to reduce the size of the image
+$Image.Enhance // Returns an image with more vibrant appearance
+$Image.Format // Imgix chooses the most appropriate file format for delivering your image based on the requesting web browser
+$Image.Redeye // Returns an image with red eye removal applied to detected faces
 ```
