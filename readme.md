@@ -21,7 +21,7 @@ Define imgix source in your site config.yml file as below
 Imgix:
   sub_domain: 'example'
   secure_url_token: '1234567891234' # (Optional) Defines the signkey for private sources
-  folder_path: 'assets/Uploads/' # (Optional) Default path id assets/Uploads/
+  folder_path: 'assets/Banners/' # (Optional) Default path id assets/
 ```
 
 ## Maintainers
