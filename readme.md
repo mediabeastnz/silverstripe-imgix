@@ -45,7 +45,7 @@ Please report security issues to the module maintainers directly. Please don't f
 If you would like to make contributions to the module please ensure you raise a pull request and discuss with the module maintainers.
 
 ## Adding to a DataObject
-Add a has_one or has_many relationship to "Imgix" in the same way you would with "Image". See example below
+Add a has_one or many_many relationship to "Imgix" in the same way you would with "Image". See example below
 
 ```php
 <?php
@@ -55,7 +55,7 @@ class MyCustomPage extends Page
 		'Image' => 'Imgix'
 	);
 
-    private static $has_many = array(
+    private static $many_many = array(
 		'Images' => 'Imgix',
 	);
 
