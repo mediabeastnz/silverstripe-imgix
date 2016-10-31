@@ -1,6 +1,7 @@
 {
     "name": "plato-creative/silverstripe-imgix",
     "description": "Integrates imgix with silverstripe.",
+    "type": "silverstripe-module",
     "keywords": ["silverstripe", "CMS"],
     "require": {
         "silverstripe/framework": "^3.2",
