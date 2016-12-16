@@ -89,6 +89,16 @@ class Imgix extends Image
     }
 
     /**
+     * Alias for getURL().
+     *
+     * @return string
+     */
+    public function getLink()
+    {
+        return $this->getURL();
+    }
+
+    /**
      * Resize this image for the CMS. Use in templates with $CMSThumbnail
      *
      * @return Image|null
