@@ -19,9 +19,12 @@ class ImageImgixTask extends BuildTask
     protected $description = 'Converts all Image classes to Imgix';
     public function run($request)
     {
-        foreach (Image::get() as $image) {
+        Debug::dump($request);
+        $objects = Image::get();
+        foreach ($objects as $image) {
             $image->setClassName('Imgix')->write();
         }
+        echo "Converted {$objects->count()} Image objects to Imgix Objects";
     }
 }
 
@@ -39,8 +42,10 @@ class ImgixImageTask extends BuildTask
     protected $description = 'Converts all Imgix classes to Image';
     public function run($request)
     {
-        foreach (Imgix::get() as $image) {
+        $objects = Imgix::get();
+        foreach ($objects as $image) {
             $image->setClassName('Image')->write();
         }
+        echo "Converted {$objects->count()} Imgix objects to Image Objects";
     }
 }
