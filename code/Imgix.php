@@ -289,7 +289,6 @@ class Imgix extends Image
 
     public function Responsive($boolean = true)
     {
-        Requirements::javascript(SSIMGIX_DIR.'/thirdparty/imgix.js/dist/imgix.min.js');
         $this->responsive = $boolean;
         return $this;
     }

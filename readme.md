@@ -3,6 +3,7 @@
 Integrates [imgix](https://docs.imgix.com/) with silverstripe.
 
 ## Requirements
+
  * [SilverStripe ^3.2](https://www.silverstripe.org/)
  * [imgix-php](https://github.com/imgix/imgix-php)
 
@@ -12,9 +13,11 @@ composer require plato-creative/silverstripe-imgix
 ```
 
 ## License
+
 See [License](license.md)
 
 ## Configuration
+
 Define imgix source in your site config.yml file as below
 ```yaml
 
@@ -24,10 +27,30 @@ Imgix:
   folder_path: 'assets/Banners/' # (Optional) Default path id assets/
 ```
 
+## Responsive Images
+
+[Imgix.js](https://www.imgix.com/imgix-js) is required for responsive images.  Use one of the following methods to install.
+
+Bower:
+```
+bower install --save imgix.js
+```
+
+NPM:
+```
+npm install --save imgix.js
+```
+
+[Manual Download](https://raw.githubusercontent.com/imgix/imgix.js/master/dist/imgix.min.js)
+
+[For more information check out the official documentation](https://www.imgix.com/imgix-js)
+
 ## Maintainers
+
  * Gorrie <gorrie@platocreative.co.nz>
 
 ## Bugtracker
+
 Bugs are tracked in the issues section of this repository. Before submitting an issue please read over
 existing issues to ensure yours is unique.
 
@@ -42,9 +65,11 @@ If the issue does look like a new bug:
 Please report security issues to the module maintainers directly. Please don't file security issues in the bugtracker.
 
 ## Development and contribution
+
 If you would like to make contributions to the module please ensure you raise a pull request and discuss with the module maintainers.
 
 ## Adding to a DataObject
+
 Add a has_one or many_many relationship to "Imgix" in the same way you would with "Image". See example below
 
 ```php
@@ -109,7 +134,7 @@ $Image.Pad(100,100) // Returns a 100x100px padded image, with white bars added a
 $Image.Pad(100, 100, CCCCCC) // Same as above but with a grey background
 
 // Responsive functions
-$Image.Responsive // Returns an image that is dynamically generated based on the size of the viewport
+$Image.Responsive // Returns an image that is dynamically generated based on the size of the viewport (Only available with imgix.js, see Responsive Images)
 
 // Automatic functions
 $Image.Compress // Returns an image using imgix's best-effort techniques to reduce the size of the image
