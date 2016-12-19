@@ -16,15 +16,16 @@ class ImageImgixTask extends BuildTask
      * Description for CMS
      * @var string
      */
-    protected $description = 'Converts all Image classes to Imgix';
+    protected $description = 'Converts all Image objects to Imgix';
+
     public function run($request)
     {
-        Debug::dump($request);
         $objects = Image::get();
+        $count = $objects->count();
         foreach ($objects as $image) {
             $image->setClassName('Imgix')->write();
         }
-        echo "Converted {$objects->count()} Image objects to Imgix Objects";
+        echo "Converted {$count} Image objects to Imgix Objects";
     }
 }
 
@@ -39,13 +40,15 @@ class ImgixImageTask extends BuildTask
      * Description for CMS
      * @var string
      */
-    protected $description = 'Converts all Imgix classes to Image';
+    protected $description = 'Converts all Imgix objects to Image';
+
     public function run($request)
     {
         $objects = Imgix::get();
+        $count = $objects->count();
         foreach ($objects as $image) {
             $image->setClassName('Image')->write();
         }
-        echo "Converted {$objects->count()} Imgix objects to Image Objects";
+        echo "Converted {$count} Imgix objects to Image Objects";
     }
 }
