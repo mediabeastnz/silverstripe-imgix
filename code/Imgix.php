@@ -8,8 +8,7 @@
 
 use Imgix\UrlBuilder;
 
-class Imgix extends Image
-{
+class Imgix extends Image {
     const ORIENTATION_SQUARE = 0;
     const ORIENTATION_PORTRAIT = 1;
     const ORIENTATION_LANDSCAPE = 2;
@@ -24,6 +23,8 @@ class Imgix extends Image
 
     protected $parameters = array();
 
+    private static $use_imgix = true;
+
     private static $casting = array(
         'Tag' => 'HTMLText',
     );
@@ -36,7 +37,7 @@ class Imgix extends Image
      */
     public function getTag()
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::getTag();
         }
 
@@ -76,7 +77,7 @@ class Imgix extends Image
      */
     public function getURL()
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::getURL();
         }
 
@@ -90,10 +91,12 @@ class Imgix extends Image
         $urlBuilder->setSignKey($this->config()->get('secure_url_token'));
         $originalFilePath = $this->getRelativePath();
         $imgixFilePath = str_ireplace($this->config()->get('folder_path'), '', $originalFilePath);
+
         $parameters = $this->parameters;
-        $this->parameters = array(); // reset all parameters ready for the next image
         $this->extend('updateParameters', $parameters);
-        return $urlBuilder->createURL($imgixFilePath, $parameters);
+        $url = $urlBuilder->createURL($imgixFilePath, $parameters);
+
+        return $url;
     }
 
     /**
@@ -101,7 +104,7 @@ class Imgix extends Image
      *
      * @return string
      */
-    public function getLink()
+    public function Link()
     {
         return $this->getURL();
     }
@@ -113,7 +116,7 @@ class Imgix extends Image
      */
     public function CMSThumbnail()
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::CMSThumbnail();
         }
 
@@ -127,7 +130,7 @@ class Imgix extends Image
      */
     public function StripThumbnail()
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::CMSThumbnail();
         }
 
@@ -143,7 +146,7 @@ class Imgix extends Image
      */
     public function Fit($width, $height)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::Fit($width, $height);
         }
 
@@ -163,7 +166,7 @@ class Imgix extends Image
      */
     public function FitMax($width, $height)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::FitMax($width, $height);
         }
         $this->setDimensions($width, $height);
@@ -181,7 +184,7 @@ class Imgix extends Image
      */
     public function Fill($width, $height)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::Fill($width, $height);
         }
 
@@ -202,7 +205,7 @@ class Imgix extends Image
      */
     public function FillMax($width, $height)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::FillMax($width, $height);
         }
         $this->Fill($width, $height);
@@ -221,7 +224,7 @@ class Imgix extends Image
      */
     public function Pad($width, $height, $backgroundColor='FFFFFF')
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::Pad($width, $height, $backgroundColor='FFFFFF');
         }
 
@@ -240,7 +243,7 @@ class Imgix extends Image
      */
     public function ScaleWidth($width)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::ScaleWidth($width);
         }
         $this->setDimensions($width);
@@ -258,7 +261,7 @@ class Imgix extends Image
     */
     public function ScaleMaxWidth($width)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::ScaleMaxWidth($width);
         }
         $this->ScaleWidth($width);
@@ -274,7 +277,7 @@ class Imgix extends Image
      */
     public function ScaleHeight($height)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::ScaleHeight($height);
         }
 
@@ -293,7 +296,7 @@ class Imgix extends Image
      */
     public function ScaleMaxHeight($height)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::ScaleMaxHeight($height);
         }
         $this->ScaleHeight($height);
@@ -312,7 +315,7 @@ class Imgix extends Image
      */
     public function CropWidth($width)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::CropWidth($width);
         }
         if ($this->getOriginalWidth() > $width) {
@@ -331,7 +334,7 @@ class Imgix extends Image
     */
     public function CropHeight($height)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::CropHeight($height);
         }
 
@@ -413,18 +416,18 @@ class Imgix extends Image
         return $this;
     }
 
-    public function FocusPoint($x, $y)
+    public function FocusPoint($x = null, $y = null)
     {
         // If focuspoint is installed and coords aren't set then get
         // coords from focuspoint
         if (class_exists('FocusPointImage')) {
-            $x = isset($x) ? $x : $this->FocusX ;
-            $y = isset($y) ? $y : $this->FocusY ;
+            $x = isset($x) ? $x : $this->FocusX;
+            $y = isset($y) ? $y : $this->FocusY;
         }
 
         // Convert coords to decimals if they are percentages.
-        $x = $x > 1 ? $x/100 : $x ;
-        $y = $y > 1 ? $y/100 : $y ;
+        $x = $x > 1 ? $x/100 : $x;
+        $y = $y > 1 ? $y/100 : $y;
 
         $this->setParameter('crop','focalpoint');
         $this->setParameter('fp-x', $x);
@@ -434,7 +437,7 @@ class Imgix extends Image
 
     public function FocusFill($width, $height)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::FocusFill($width, $height);
         }
 
@@ -445,7 +448,7 @@ class Imgix extends Image
 
     public function FocusFillMax($width, $height)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::FocusFillMax($width, $height);
         }
         $this->FocusPoint();
@@ -455,7 +458,7 @@ class Imgix extends Image
 
     public function FocusCropWidth($width)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::FocusCropWidth($width);
         }
 
@@ -466,7 +469,7 @@ class Imgix extends Image
 
     public function FocusCropHeight($height)
     {
-        if (Director::isDev()) {
+        if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::FocusCropHeight($height);
         }
 
