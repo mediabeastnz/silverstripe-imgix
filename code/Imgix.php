@@ -166,7 +166,6 @@ class Imgix extends Image
         if (Director::isDev()) {
             return Parent::FitMax($width, $height);
         }
-
         $this->setDimensions($width, $height);
         $this->setParameter('fit','max');
         return $this;
@@ -191,10 +190,6 @@ class Imgix extends Image
         return $this;
     }
 
-    public function FocusFill($width, $height){
-        return $this->Fill($width, $height);
-    }
-
     /**
      * Crop this image to the aspect ratio defined by the specified width and height,
      * then scale down the image to those dimensions if it exceeds them.
@@ -210,7 +205,6 @@ class Imgix extends Image
         if (Director::isDev()) {
             return Parent::FillMax($width, $height);
         }
-
         $this->Fill($width, $height);
         $this->setParameter('max-w', $this->getOriginalWidth());
         $this->setParameter('max-h', $this->getOriginalHeight());
@@ -249,7 +243,6 @@ class Imgix extends Image
         if (Director::isDev()) {
             return Parent::ScaleWidth($width);
         }
-
         $this->setDimensions($width);
         $this->setParameter('fit','clip');
         return $this;
@@ -268,7 +261,6 @@ class Imgix extends Image
         if (Director::isDev()) {
             return Parent::ScaleMaxWidth($width);
         }
-
         $this->ScaleWidth($width);
         $this->setParameter('max-w', $this->getOriginalWidth());
         return $this;
@@ -304,7 +296,6 @@ class Imgix extends Image
         if (Director::isDev()) {
             return Parent::ScaleMaxHeight($height);
         }
-
         $this->ScaleHeight($height);
         $this->setParameter('max-h', $this->getOriginalHeight());
         return $this;
@@ -324,7 +315,6 @@ class Imgix extends Image
         if (Director::isDev()) {
             return Parent::CropWidth($width);
         }
-
         if ($this->getOriginalWidth() > $width) {
             $this->Fill($width, $this->getOriginalHeight());
         }
@@ -420,6 +410,68 @@ class Imgix extends Image
     public function Edges()
     {
         $this->setParameter('crop', 'edges', true);
+        return $this;
+    }
+
+    public function FocusPoint($x, $y)
+    {
+        // If focuspoint is installed and coords aren't set then get
+        // coords from focuspoint
+        if (class_exists('FocusPointImage')) {
+            $x = isset($x) ? $x : $this->FocusX ;
+            $y = isset($y) ? $y : $this->FocusY ;
+        }
+
+        // Convert coords to decimals if they are percentages.
+        $x = $x > 1 ? $x/100 : $x ;
+        $y = $y > 1 ? $y/100 : $y ;
+
+        $this->setParameter('crop','focalpoint');
+        $this->setParameter('fp-x', $x);
+        $this->setParameter('fp-y', $y);
+        return $this;
+    }
+
+    public function FocusFill($width, $height)
+    {
+        if (Director::isDev()) {
+            return Parent::FocusFill($width, $height);
+        }
+
+        $this->FocusPoint();
+        $this->Fill($width, $height);
+        return $this;
+    }
+
+    public function FocusFillMax($width, $height)
+    {
+        if (Director::isDev()) {
+            return Parent::FocusFillMax($width, $height);
+        }
+        $this->FocusPoint();
+        $this->FillMax($width, $height);
+        return $this;
+    }
+
+    public function FocusCropWidth($width)
+    {
+        if (Director::isDev()) {
+            return Parent::FocusCropWidth($width);
+        }
+
+        $this->FocusPoint();
+        $this->CropWidth($width);
+        return $this;
+    }
+
+    public function FocusCropHeight($height)
+    {
+        if (Director::isDev()) {
+            return Parent::FocusCropHeight($height);
+        }
+
+        $this->FocusPoint();
+        $this->CropHeight($height);
         return $this;
     }
 
@@ -529,22 +581,5 @@ class Imgix extends Image
      */
     public function getHeight() {
         return ($this->getParameter('h')) ? $this->getParameter('h') : $this->getOriginalHeight();
-    }
-
-    /**
-     * Get the orientation of this image.
-     * @return ORIENTATION_SQUARE | ORIENTATION_PORTRAIT | ORIENTATION_LANDSCAPE
-     */
-    public function getOrientation()
-    {
-        $width = $this->getWidth();
-        $height = $this->getHeight();
-        if($width > $height) {
-            return self::ORIENTATION_LANDSCAPE;
-        } elseif($height > $width) {
-            return self::ORIENTATION_PORTRAIT;
-        } else {
-            return self::ORIENTATION_SQUARE;
-        }
     }
 }
