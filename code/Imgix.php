@@ -18,7 +18,7 @@ class Imgix extends Image
 
     private static $secure_url_token = null;
 
-    private static $folder_path = 'assets/Uploads/';
+    private static $folder_path = 'assets/';
 
     protected $responsive = false;
 
@@ -36,6 +36,10 @@ class Imgix extends Image
      */
     public function getTag()
     {
+        if (Director::isDev()) {
+            return Parent::getTag();
+        }
+
         if($this->exists()) {
             $url = $this->getURL();
             $title = ($this->Title) ? $this->Title : $this->Filename;
@@ -72,6 +76,10 @@ class Imgix extends Image
      */
     public function getURL()
     {
+        if (Director::isDev()) {
+            return Parent::getURL();
+        }
+
         $subDomain = $this->config()->get('sub_domain');
         if (!$subDomain) {
             user_error("Undefined sub_domain: Please Imgix sub_domain in your config", E_USER_ERROR);
@@ -105,6 +113,10 @@ class Imgix extends Image
      */
     public function CMSThumbnail()
     {
+        if (Director::isDev()) {
+            return Parent::CMSThumbnail();
+        }
+
         return $this->Pad($this->stat('cms_thumbnail_width'),$this->stat('cms_thumbnail_height'));
     }
 
@@ -115,6 +127,10 @@ class Imgix extends Image
      */
     public function StripThumbnail()
     {
+        if (Director::isDev()) {
+            return Parent::CMSThumbnail();
+        }
+
         return $this->Fill($this->stat('strip_thumbnail_width'),$this->stat('strip_thumbnail_height'));
     }
 
@@ -127,6 +143,10 @@ class Imgix extends Image
      */
     public function Fit($width, $height)
     {
+        if (Director::isDev()) {
+            return Parent::Fit($width, $height);
+        }
+
         $this->setDimensions($width, $height);
         $this->setParameter('fit','clip');
         return $this;
@@ -143,6 +163,10 @@ class Imgix extends Image
      */
     public function FitMax($width, $height)
     {
+        if (Director::isDev()) {
+            return Parent::FitMax($width, $height);
+        }
+
         $this->setDimensions($width, $height);
         $this->setParameter('fit','max');
         return $this;
@@ -158,9 +182,17 @@ class Imgix extends Image
      */
     public function Fill($width, $height)
     {
+        if (Director::isDev()) {
+            return Parent::Fill($width, $height);
+        }
+
         $this->setDimensions($width, $height);
         $this->setParameter('fit','crop');
         return $this;
+    }
+
+    public function FocusFill($width, $height){
+        return $this->Fill($width, $height);
     }
 
     /**
@@ -175,6 +207,10 @@ class Imgix extends Image
      */
     public function FillMax($width, $height)
     {
+        if (Director::isDev()) {
+            return Parent::FillMax($width, $height);
+        }
+
         $this->Fill($width, $height);
         $this->setParameter('max-w', $this->getOriginalWidth());
         $this->setParameter('max-h', $this->getOriginalHeight());
@@ -191,6 +227,10 @@ class Imgix extends Image
      */
     public function Pad($width, $height, $backgroundColor='FFFFFF')
     {
+        if (Director::isDev()) {
+            return Parent::Pad($width, $height, $backgroundColor='FFFFFF');
+        }
+
         $this->setDimensions($width, $height);
         $this->setParameter('fit','fill');
         $this->setParameter('bg', $backgroundColor);
@@ -206,6 +246,10 @@ class Imgix extends Image
      */
     public function ScaleWidth($width)
     {
+        if (Director::isDev()) {
+            return Parent::ScaleWidth($width);
+        }
+
         $this->setDimensions($width);
         $this->setParameter('fit','clip');
         return $this;
@@ -221,6 +265,10 @@ class Imgix extends Image
     */
     public function ScaleMaxWidth($width)
     {
+        if (Director::isDev()) {
+            return Parent::ScaleMaxWidth($width);
+        }
+
         $this->ScaleWidth($width);
         $this->setParameter('max-w', $this->getOriginalWidth());
         return $this;
@@ -234,6 +282,10 @@ class Imgix extends Image
      */
     public function ScaleHeight($height)
     {
+        if (Director::isDev()) {
+            return Parent::ScaleHeight($height);
+        }
+
         $this->setDimensions(null, $height);
         $this->setParameter('fit','clip');
         return $this;
@@ -249,6 +301,10 @@ class Imgix extends Image
      */
     public function ScaleMaxHeight($height)
     {
+        if (Director::isDev()) {
+            return Parent::ScaleMaxHeight($height);
+        }
+
         $this->ScaleHeight($height);
         $this->setParameter('max-h', $this->getOriginalHeight());
         return $this;
@@ -265,6 +321,10 @@ class Imgix extends Image
      */
     public function CropWidth($width)
     {
+        if (Director::isDev()) {
+            return Parent::CropWidth($width);
+        }
+
         if ($this->getOriginalWidth() > $width) {
             $this->Fill($width, $this->getOriginalHeight());
         }
@@ -281,6 +341,10 @@ class Imgix extends Image
     */
     public function CropHeight($height)
     {
+        if (Director::isDev()) {
+            return Parent::CropHeight($height);
+        }
+
         if ($this->getOriginalHeight() > $height) {
             $this->Fill($height, $this->getOriginalWidth());
         }
