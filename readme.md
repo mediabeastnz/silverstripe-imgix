@@ -27,6 +27,17 @@ Imgix:
   folder_path: 'assets/Banners/' # (Optional) Default path id assets/
 ```
 
+Set the Imgix class to be used for new Image uploads
+```yaml
+File:
+  class_for_file_extension:
+    '*': 'File'
+    'jpg': 'Imgix'
+    'jpeg': 'Imgix'
+    'png': 'Imgix'
+    'gif': 'Imgix'
+```
+
 ## Responsive Images
 
 [Imgix.js](https://www.imgix.com/imgix-js) is required for responsive images.  Use one of the following methods to install.
