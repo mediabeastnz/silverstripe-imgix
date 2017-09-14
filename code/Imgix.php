@@ -562,7 +562,7 @@ class Imgix extends Image {
     }
 
     public function getOriginalWidth() {
-        return $this->getDimensions(1);
+        return $this->getDimensions(0);
     }
 
     /**
@@ -575,7 +575,7 @@ class Imgix extends Image {
     }
 
     public function getOriginalHeight() {
-        return $this->getDimensions(0);
+        return $this->getDimensions(1);
     }
 
     /**
