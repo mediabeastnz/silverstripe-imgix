@@ -11,11 +11,11 @@
     "license": "BSD-3-Clause",
     "minimum-stability": "dev",
     "extra": {
-        "installer-name": "imgix"
+        "installer-name": "silverstripe-imgix"
     },
     "autoload": {
-        "psr-0": {
-            "plato-creative\\SilverStripe\\imgix\\": "src/"
+        "psr-4": {
+            "PlatoCreative\\Imgix\\": "src/"
         }
     }
 }
