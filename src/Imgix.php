@@ -547,48 +547,4 @@ class Imgix extends Image {
         }
         return $this;
     }
-
-    /**
-     * Get the dimensions of this Image.
-     * @param string $dim If this is equal to "string", return the dimensions in string form,
-     * if it is 0 return the height, if it is 1 return the width.
-     * @return string|int|null
-     */
-    public function getDimensions($dim = "string")
-    {
-        if($this->getField('Filename')) {
-            $imagefile = $this->getFullPath();
-            if($this->exists()) {
-                $size = getimagesize($imagefile);
-                return ($dim === "string") ? "$size[0]x$size[1]" : $size[$dim];
-            } else {
-                return ($dim === "string") ? "file '$imagefile' not found" : null;
-            }
-        }
-    }
-
-    public function getOriginalWidth() {
-        return $this->getDimensions(0);
-    }
-
-    /**
-    * Get the width of this image.
-    * @return int
-    */
-    public function getWidth()
-    {
-        return ($this->getParameter('w')) ? $this->getParameter('w') : $this->getOriginalWidth();
-    }
-
-    public function getOriginalHeight() {
-        return $this->getDimensions(1);
-    }
-
-    /**
-     * Get the height of this image.
-     * @return int
-     */
-    public function getHeight() {
-        return ($this->getParameter('h')) ? $this->getParameter('h') : $this->getOriginalHeight();
-    }
 }
