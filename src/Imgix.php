@@ -95,7 +95,7 @@ class Imgix extends Image {
         $urlBuilder = new UrlBuilder($domain);
         $urlBuilder->setUseHttps(Director::is_https());
         $urlBuilder->setSignKey($this->config()->get('secure_url_token'));
-        $originalFilePath = $this->getRelativePath();
+        $originalFilePath = Director::makeRelative(Parent::getURL());
         $imgixFilePath = str_ireplace($this->config()->get('folder_path'), '', $originalFilePath);
 
         $parameters = $this->parameters;
