@@ -1,13 +1,16 @@
 <?php
+
+namespace PlatoCreative\Imgix;
+
+use SilverStripe\Dev\BuildTask;
+use SilverStripe\Assets\Image;
+
 /**
  * Converts Images to Imgix or vise versa
  *
  * @package silverstripe
  * @subpackage mysite
  */
-
-use SilverStripe\Dev\BuildTask;
-use SilverStripe\Assets\Image;
 
 class ImageImgixTask extends BuildTask
 {

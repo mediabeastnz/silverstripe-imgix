@@ -1,4 +1,11 @@
 <?php
+
+namespace PlatoCreative\Imgix;
+
+use SilverStripe\Control\Director;
+use SilverStripe\Assets\Image;
+use Imgix\UrlBuilder;
+
 /**
  * Represents an Image via Imgix
  *
@@ -6,8 +13,6 @@
  * @subpackage filesystem
  */
 
-use SilverStripe\Assets\Image;
-use Imgix\UrlBuilder;
 
 class Imgix extends Image {
     const ORIENTATION_SQUARE = 0;
