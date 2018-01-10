@@ -6,6 +6,7 @@
  * @subpackage filesystem
  */
 
+use SilverStripe\Assets\Image;
 use Imgix\UrlBuilder;
 
 class Imgix extends Image {
@@ -75,7 +76,7 @@ class Imgix extends Image {
      * @uses Director::baseURL()
      * @return string
      */
-    public function getURL()
+    public function getURL($grant = true)
     {
         if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::getURL();
@@ -222,10 +223,10 @@ class Imgix extends Image {
      * @param integer $height The height to size to
      * @return Image|null
      */
-    public function Pad($width, $height, $backgroundColor='FFFFFF')
+    public function Pad($width, $height, $backgroundColor='FFFFFF', $transparencyPercent = 0)
     {
         if (Director::isDev() || !$this->config()->get('use_imgix')) {
-            return Parent::Pad($width, $height, $backgroundColor='FFFFFF');
+            return Parent::Pad($width, $height, $backgroundColor='FFFFFF', $transparencyPercent = 0);
         }
 
         $this->setDimensions($width, $height);

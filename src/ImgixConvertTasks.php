@@ -5,6 +5,10 @@
  * @package silverstripe
  * @subpackage mysite
  */
+
+use SilverStripe\Dev\BuildTask;
+use SilverStripe\Assets\Image;
+
 class ImageImgixTask extends BuildTask
 {
     /**
