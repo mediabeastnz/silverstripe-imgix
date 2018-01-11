@@ -493,6 +493,7 @@ class Imgix extends Image {
             $parameters = $value;
         }
         $this->parameters[$key] = $parameters;
+        $this->Variant = $this->variantName(__FUNCTION__, $this->parameters);
         return $this;
     }
 
