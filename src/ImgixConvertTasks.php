@@ -30,7 +30,7 @@ class ImageImgixTask extends BuildTask
         $objects = Image::get();
         $count = $objects->count();
         foreach ($objects as $image) {
-            $image->setClassName('Imgix')->write();
+            $image->setClassName(Imgix::class)->write();
         }
         echo "Converted {$count} Image objects to Imgix Objects";
     }
@@ -54,7 +54,7 @@ class ImgixImageTask extends BuildTask
         $objects = Imgix::get();
         $count = $objects->count();
         foreach ($objects as $image) {
-            $image->setClassName('Image')->write();
+            $image->setClassName(Imgix::class)->write();
         }
         echo "Converted {$count} Imgix objects to Image Objects";
     }
