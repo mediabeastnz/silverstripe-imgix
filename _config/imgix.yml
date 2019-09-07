@@ -1,0 +1,12 @@
+---
+Name: imgix
+After: assetadmingraphql-dependencies
+---
+
+# Fixes assets-admin module from assuming thumbnails already exist
+# as they never will due to them being hosted on the CDN
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\AssetAdmin\Model\ThumbnailGenerator.graphql:
+    class: SilverStripe\AssetAdmin\Model\ThumbnailGenerator
+    properties:
+      Generates: true
