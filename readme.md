@@ -4,7 +4,7 @@ Integrates [imgix](https://docs.imgix.com/) with silverstripe.
 
 ## Requirements
 
- * [SilverStripe ^3.2](https://www.silverstripe.org/)
+ * [SilverStripe ^4](https://www.silverstripe.org/)
  * [imgix-php](https://github.com/imgix/imgix-php)
 
 ## Installation
@@ -21,10 +21,21 @@ See [License](license.md)
 Define imgix source in your site config.yml file as below
 ```yaml
 
-Imgix:
+PlatoCreative\Imgix\Imgix:
   sub_domain: 'example'
   secure_url_token: '1234567891234' # (Optional) Defines the signkey for private sources
   folder_path: 'assets/Banners/' # (Optional) Default path id assets/
+```
+
+Set the Imgix class to be used for new Image uploads
+```yaml
+SilverStripe\Assets\File:
+  class_for_file_extension:
+    '*': 'File'
+    'jpg': PlatoCreative\Imgix\Imgix
+    'jpeg': PlatoCreative\Imgix\Imgix
+    'png': PlatoCreative\Imgix\Imgix
+    'gif': PlatoCreative\Imgix\Imgix
 ```
 
 ## Responsive Images
@@ -70,18 +81,20 @@ If you would like to make contributions to the module please ensure you raise a 
 
 ## Adding to a DataObject
 
-Add a has_one or many_many relationship to "Imgix" in the same way you would with "Image". See example below
+Add a has_one or many_many relationship to "Imgix::class" in the same way you would with "Image::class". See example below
 
 ```php
 <?php
+use PlatoCreative\Imgix\Imgix;
+
 class MyCustomPage extends Page
 {
 	private static $has_one = array(
-		'Image' => 'Imgix'
+		'Image' => Imgix::class
 	);
 
     private static $many_many = array(
-		'Images' => 'Imgix',
+		'Images' => Imgix::class,
 	);
 
 	public function getCMSFields()

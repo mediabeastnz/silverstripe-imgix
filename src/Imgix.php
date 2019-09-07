@@ -1,4 +1,12 @@
 <?php
+
+namespace PlatoCreative\Imgix;
+
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Convert;
+use SilverStripe\Assets\Image;
+use Imgix\UrlBuilder;
+
 /**
  * Represents an Image via Imgix
  *
@@ -6,7 +14,6 @@
  * @subpackage filesystem
  */
 
-use Imgix\UrlBuilder;
 
 class Imgix extends Image {
     const ORIENTATION_SQUARE = 0;
@@ -75,7 +82,7 @@ class Imgix extends Image {
      * @uses Director::baseURL()
      * @return string
      */
-    public function getURL()
+    public function getURL($grant = true)
     {
         if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::getURL();
@@ -89,7 +96,7 @@ class Imgix extends Image {
         $urlBuilder = new UrlBuilder($domain);
         $urlBuilder->setUseHttps(Director::is_https());
         $urlBuilder->setSignKey($this->config()->get('secure_url_token'));
-        $originalFilePath = $this->getRelativePath();
+        $originalFilePath = Director::makeRelative(Parent::getURL());
         $imgixFilePath = str_ireplace($this->config()->get('folder_path'), '', $originalFilePath);
 
         $parameters = $this->parameters;
@@ -209,8 +216,8 @@ class Imgix extends Image {
             return Parent::FillMax($width, $height);
         }
         $this->Fill($width, $height);
-        $this->setParameter('max-w', $this->getOriginalWidth());
-        $this->setParameter('max-h', $this->getOriginalHeight());
+        $this->setParameter('max-w', $this->getWidth());
+        $this->setParameter('max-h', $this->getHeight());
         return $this;
     }
 
@@ -222,10 +229,10 @@ class Imgix extends Image {
      * @param integer $height The height to size to
      * @return Image|null
      */
-    public function Pad($width, $height, $backgroundColor='FFFFFF')
+    public function Pad($width, $height, $backgroundColor='FFFFFF', $transparencyPercent = 0)
     {
         if (Director::isDev() || !$this->config()->get('use_imgix')) {
-            return Parent::Pad($width, $height, $backgroundColor='FFFFFF');
+            return Parent::Pad($width, $height, $backgroundColor='FFFFFF', $transparencyPercent = 0);
         }
 
         $this->setDimensions($width, $height);
@@ -265,7 +272,7 @@ class Imgix extends Image {
             return Parent::ScaleMaxWidth($width);
         }
         $this->ScaleWidth($width);
-        $this->setParameter('max-w', $this->getOriginalWidth());
+        $this->setParameter('max-w', $this->getWidth());
         return $this;
     }
 
@@ -300,7 +307,7 @@ class Imgix extends Image {
             return Parent::ScaleMaxHeight($height);
         }
         $this->ScaleHeight($height);
-        $this->setParameter('max-h', $this->getOriginalHeight());
+        $this->setParameter('max-h', $this->getHeight());
         return $this;
     }
 
@@ -318,8 +325,8 @@ class Imgix extends Image {
         if (Director::isDev() || !$this->config()->get('use_imgix')) {
             return Parent::CropWidth($width);
         }
-        if ($this->getOriginalWidth() > $width) {
-            $this->Fill($width, $this->getOriginalHeight());
+        if ($this->getWidth() > $width) {
+            $this->Fill($width, $this->getHeight());
         }
         return $this;
     }
@@ -338,8 +345,8 @@ class Imgix extends Image {
             return Parent::CropHeight($height);
         }
 
-        if ($this->getOriginalHeight() > $height) {
-            $this->Fill($height, $this->getOriginalWidth());
+        if ($this->getHeight() > $height) {
+            $this->Fill($height, $this->getWidth());
         }
         return $this;
     }
@@ -487,6 +494,7 @@ class Imgix extends Image {
             $parameters = $value;
         }
         $this->parameters[$key] = $parameters;
+        $this->Variant = $this->variantName(__FUNCTION__, $this->parameters);
         return $this;
     }
 
@@ -540,49 +548,5 @@ class Imgix extends Image {
             $this->setParameter('h', $height);
         }
         return $this;
-    }
-
-    /**
-     * Get the dimensions of this Image.
-     * @param string $dim If this is equal to "string", return the dimensions in string form,
-     * if it is 0 return the height, if it is 1 return the width.
-     * @return string|int|null
-     */
-    public function getDimensions($dim = "string")
-    {
-        if($this->getField('Filename')) {
-            $imagefile = $this->getFullPath();
-            if($this->exists()) {
-                $size = getimagesize($imagefile);
-                return ($dim === "string") ? "$size[0]x$size[1]" : $size[$dim];
-            } else {
-                return ($dim === "string") ? "file '$imagefile' not found" : null;
-            }
-        }
-    }
-
-    public function getOriginalWidth() {
-        return $this->getDimensions(1);
-    }
-
-    /**
-    * Get the width of this image.
-    * @return int
-    */
-    public function getWidth()
-    {
-        return ($this->getParameter('w')) ? $this->getParameter('w') : $this->getOriginalWidth();
-    }
-
-    public function getOriginalHeight() {
-        return $this->getDimensions(0);
-    }
-
-    /**
-     * Get the height of this image.
-     * @return int
-     */
-    public function getHeight() {
-        return ($this->getParameter('h')) ? $this->getParameter('h') : $this->getOriginalHeight();
     }
 }
